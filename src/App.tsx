@@ -14,56 +14,34 @@ const initState = {
 function App() {
   const [partyInfo, setPartyInfo] = useState(initState);
 
-  const stateChange = (changeObj: any) => {
+  const stateChangeParty = (changeObj: any) => {
     setPartyInfo((prev) => {
       return {
         ...prev,
-        ...changeObj
-      }
-    })  
-  }
+        ...changeObj,
+      };
+    });
+  };
 
   const handleCall = (e: any, idInput: string, num: string) => {
     console.log(idInput, num);
     if (partyInfo[idInput]) {
       if (partyInfo[idInput].status !== "idle") {
-        setPartyInfo((prev) => {
-          return {
-            ...prev,
-            [num]: { status: "remote is busy", caller: "" }, //settimeout
-          };
-        });
+        stateChangeParty({ [num]: { status: "remote is busy", caller: "" } }); //settimeout
         setTimeout(() => {
-          setPartyInfo((prev) => {
-            return {
-              ...prev,
-              [num]: { status: "idle", caller: "" },
-            };
-          });
-        },1000)
-      }
-      setPartyInfo((prev) => {
-        return {
-          ...prev,
+          stateChangeParty({ [num]: { status: "idle", caller: "" } });
+        }, 1000);
+      } else {
+        stateChangeParty({
           [num]: { status: "remote is ringing", caller: idInput },
           [idInput]: { status: "ringing", caller: num },
-        };
-      });
-    } else {
-      setPartyInfo((prev) => {
-        return {
-          ...prev,
-          [num]: { status: "remote unknown", caller: "" }, //settimeout
-        };
-      });
-      setTimeout(() => {
-        setPartyInfo((prev) => {
-          return {
-            ...prev,
-            [num]: { status: "idle", caller: "" },
-          };
         });
-      },1000)
+      }
+    } else {
+      stateChangeParty( {[num]: { status: "remote unknown", caller: "" }}) //settimeout
+      setTimeout(() => {
+        stateChangeParty({[num]: { status: "idle", caller: "" }}) 
+      }, 1000);
     }
     e.preventDefault();
   };
@@ -78,23 +56,23 @@ function App() {
     });
   };
   const answer = (num: string) => {
-    setPartyInfo(prev => {
+    setPartyInfo((prev) => {
       return {
         ...prev,
         [prev[num].caller]: { status: "talking", caller: num },
         [num]: { status: "talking", caller: prev[num].caller },
-      }
-    })
+      };
+    });
   };
   const reject = (num: string) => {
-    const caller = partyInfo[num].caller
-    setPartyInfo(prev => {
+    const caller = partyInfo[num].caller;
+    setPartyInfo((prev) => {
       return {
         ...prev,
-        [caller]: { status: "remote rejected", caller: num },  //settimout
+        [caller]: { status: "remote rejected", caller: num }, //settimout
         [num]: { status: "idle", caller: "" },
-      }
-    })
+      };
+    });
     setTimeout(() => {
       setPartyInfo((prev) => {
         return {
@@ -102,7 +80,7 @@ function App() {
           [caller]: { status: "idle", caller: "" },
         };
       });
-    },1000)
+    }, 1000);
   };
   return (
     <div className="App">
