@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import CallScreen from "./Components/CallScreen/CallScreen";
 
-const rand = () => Math.floor(Math.random() * 1000 - 1).toString(); //memoize
+const rand = () => Math.floor(Math.random() * 1000 - 1).toString();
 
 const initState = {
   [rand()]: { status: "idle", caller: "" },
@@ -27,7 +27,7 @@ function App() {
     console.log(idInput, num);
     if (partyInfo[idInput]) {
       if (partyInfo[idInput].status !== "idle") {
-        stateChangeParty({ [num]: { status: "remote is busy", caller: "" } }); //settimeout
+        stateChangeParty({ [num]: { status: "remote is busy", caller: "" } });
         setTimeout(() => {
           stateChangeParty({ [num]: { status: "idle", caller: "" } });
         }, 1000);
@@ -38,9 +38,9 @@ function App() {
         });
       }
     } else {
-      stateChangeParty( {[num]: { status: "remote unknown", caller: "" }}) //settimeout
+      stateChangeParty({ [num]: { status: "remote unknown", caller: "" } });
       setTimeout(() => {
-        stateChangeParty({[num]: { status: "idle", caller: "" }}) 
+        stateChangeParty({ [num]: { status: "idle", caller: "" } });
       }, 1000);
     }
     e.preventDefault();
@@ -69,7 +69,7 @@ function App() {
     setPartyInfo((prev) => {
       return {
         ...prev,
-        [caller]: { status: "remote rejected", caller: num }, //settimout
+        [caller]: { status: "remote rejected", caller: num },
         [num]: { status: "idle", caller: "" },
       };
     });
